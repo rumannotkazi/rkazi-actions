@@ -15,8 +15,6 @@ jobs:
     steps:
       - name: checkout
         uses: actions/checkout@v2
-        with:
-          fetch-depth: 0
       - name: Check if ${{ inputs.file-name }} exists
         run: |
           if [ ! -f ${{ inputs.file-name }} ]; then
