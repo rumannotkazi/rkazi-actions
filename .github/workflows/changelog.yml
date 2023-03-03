@@ -1,6 +1,13 @@
 name: Check CHANGELOG.md exists
 
-on: workflow_call
+on: 
+  workflow_call:
+    inputs:
+      file-name:
+        description: "Location of the file to be checked"
+        required: true
+        default: CHANGELOG.md
+        type: string
 
 jobs:
   check-file:
@@ -10,16 +17,16 @@ jobs:
         uses: actions/checkout@v2
         with:
           fetch-depth: 0
-      - name: Check if CHANGELOG.md exists
+      - name: Check if ${{ inputs.file-name }} exists
         run: |
-          if [ ! -f CHANGELOG.md ]; then
+          if [ ! -f ${{ inputs.file-name }} ]; then
             echo "ERROR"
             exit 1
           fi 
-      - name: Check if CHANGELOG.md is updated
+      - name: Check if ${{ inputs.file-name }} is updated
         run: |
           git fetch origin
-          if git diff --name-only origin/${{ github.base_ref }}..origin/${{ github.head_ref }} | grep -q "^CHANGELOG.md" ; then
+          if git diff --name-only origin/${{ github.base_ref }}..origin/${{ github.head_ref }} | grep -q "^${{ inputs.file-name }}" ; then
             echo "Het is updated"
           else
             echo "Error"
