@@ -27,7 +27,7 @@ jobs:
       - name: Check dependencies
         id: check-dependencies
         env:
-          repositories: ${{ env.repositories }}
+          repositories: $repositories
         run: |
           for repository in $repositories; do
             git clone "https://github.com/$repository.git"
