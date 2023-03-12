@@ -65,7 +65,7 @@ jobs:
                         has_fixed_versions=false
                     fi
 
-                    if [[ "${gem}" =~ "${repositories[@]}" ]]; then
+                    if [[ ${repositories[@]} =~ $gem ]]; then
                       echo -e "$gem : Tool exists\n"
                     else
                       echo -e "$gem : Tool Doesn't exist\n"
