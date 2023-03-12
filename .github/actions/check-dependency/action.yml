@@ -1,0 +1,26 @@
+name: Check dependency
+
+description: Checks the dependencies mentioned in a gemspec file
+
+author: Ruman Kazi
+
+inputs:
+  repositories-to-check:
+    description: 'Repos to check'
+    required: true
+
+
+
+runs:
+  using: "composite"
+  steps:
+    - name: Checkout repositories
+      uses: actions/checkout@v3
+    - name: Check dependencies
+      shell: bash
+      run: |
+        REPOS=$(cat ${{ inputs.repositories-to-check }})
+        for repo in REPOS
+          git clone $repo
+          GEMSPEC=$(ls *.gemspec)
+

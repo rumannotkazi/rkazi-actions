@@ -1,0 +1,40 @@
+name: Check Dependencies
+
+on:
+  workflow_dispatch:
+    inputs:
+      repositories-file:
+        description: 'Path to the file that contains the repositories to check'
+        required: true
+        default: 'repositories-to-check.txt'
+
+jobs:
+  check-dependencies:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v3
+
+      - name: Read repositories file
+        id: read-repositories-file
+        run: |
+          echo ::set-output name=repositories::$(cat ${{ inputs.repositories-file }})
+
+      - name: Check dependencies
+        id: check-dependencies
+        run: |
+          for repository in ${{ steps.read-repositories-file.outputs.repositories }}; do
+            cd $repository
+            gemspec_file=$(find . -type f -name '*.gemspec' -print -quit)
+            if [[ -z $gemspec_file ]]; then
+              echo "No .gemspec file found in $repository"
+              exit 1
+            fi
+            bundle-audit check --update > /dev/null
+            if [[ $? -ne 0 ]]; then
+              echo "Dependencies are not fixed in $repository"
+              exit 1
+            fi
+            cd ..
+          done
