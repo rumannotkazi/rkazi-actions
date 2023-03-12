@@ -27,11 +27,13 @@ jobs:
       - name: Check dependencies
         id: check-dependencies
         env:
-          repositories_col: ${{ env.repositories}}
+          repositories_col: ${{ env.repositories }}
         run: |
           has_fixed_versions=true
+          
           for repository in $repositories_col; do
-            git clone "https://github.com/$repository.git"
+
+            git clone "https://github.com/rumannotkazi/$repository.git"
             cd "$(basename "$repository" .git)"
             gemspec_file=$(find . -type f -name '*.gemspec' -print -quit)
             if [[ -z $gemspec_file ]]; then
@@ -53,7 +55,7 @@ jobs:
                     if [[ $line == spec.add_runtime* ]]; then
                         dependency_type="Runtime"
                     fi
-                    gem=$(echo "$line" | awk '{print $2}' | sed 's/"//g')
+                    gem=$(echo "$line" | awk '{gsub(/,/,"",$2); print $2}' | sed 's/"//g')
                     state=$(echo "$line" | awk '{print $3}' | sed 's/[",]//g')
                     version=$(echo "$line" | awk '{print $4}' | sed 's/[",]//g')
 
@@ -61,6 +63,12 @@ jobs:
                         echo -e "$repository: $dependency_type Dependency '${gem}' does not have a fixed version "
                         echo -e " -> GEM:$gem State:$state, Version:$version\n"
                         has_fixed_versions=false
+                    fi
+
+                    if [[ $gem =~ $repositories_col ]]; then
+                      echo "Tool exists"
+                    else
+                      echo "Tool Doesn't exist"
                     fi
                 fi
             done < $gemspec_file
