@@ -42,7 +42,7 @@ jobs:
             echo "REPOSITORY BEING CHECKED : $repository"
             gemspec_dependencies=($(grep "^ *spec.add_*" "$gemspec_file" | awk '{print $2, $3, $5}'))
             
-            echo "$gemspec_file"
+            echo -e "GEMSPEC file being checked: $gemspec_file\n"
             
             while read -r line; do
                 if [[ $line == spec.add_*dependency* ]]; then
@@ -51,7 +51,7 @@ jobs:
                     version=$(echo "$line" | awk '{print $4}' | sed 's/[",]//g')
 
                     if [[ "$state" == "~>"* || "$state" == ">="* || "$state" == "<="* || "$state" == "<"* || "$state" == ">"* ]]; then
-                        echo -e "Dependency ${gem} does not have a fixed version "
+                        echo -e "Dependency '${gem}' does not have a fixed version "
                         echo -e "GEM:$gem Version:$version,  State:$state\n"
                         has_fixed_versions=false
                     fi
@@ -62,7 +62,7 @@ jobs:
             
           done
 
-          if ! $has_fixed_version; then
+          if ! $has_fixed_versions; then
             echo "At least one tool has dependency not fixed"
             exit 1
           fi
