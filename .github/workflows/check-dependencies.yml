@@ -38,6 +38,8 @@ jobs:
               echo "No .gemspec file found in $repository"
               exit 1
             fi
+            
+            echo "REPOSITORY BEING CHECKED : $repository" 
             gemspec_dependencies=($(grep "^ *spec.add_*" "$gemspec_file" | awk '{print $2, $3, $5}'))
             
             echo -e "GEMSPEC file being checked: $gemspec_file\n"
@@ -64,7 +66,7 @@ jobs:
             done < $gemspec_file
             cd ..
             rm -rf "$(basename "$repository" .git)"
-            echo -e "--------------------------------------------\n""
+            echo -e "--------------------------------------------\n"
           done
 
           if ! $has_fixed_versions; then
