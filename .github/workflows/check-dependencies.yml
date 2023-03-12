@@ -67,7 +67,7 @@ jobs:
 
                     if [[ ${repositories[@]} =~ $gem ]]; then
                       echo -e "$gem : Tool exists\n"
-                      tags=$(git ls-remote --tags https://github.com/rumannotkazi/$gem.git)
+                      tags=$(git ls-remote --tags "https://github.com/rumannotkazi/test-ruby-tool-2.git")
                       # Extract the latest tag
                       latest_tag=$(echo "$tags" | awk '{ print $2 }' | grep -v '{}' | sort -V | tail -n1 | sed 's|refs/tags/||')
                       # Print the latest tag
