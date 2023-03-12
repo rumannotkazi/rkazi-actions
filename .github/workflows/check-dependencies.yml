@@ -67,6 +67,11 @@ jobs:
 
                     if [[ ${repositories[@]} =~ $gem ]]; then
                       echo -e "$gem : Tool exists\n"
+                      tags=$(git ls-remote --tags https://github.com/rumannotkazi/$gem.git)
+                      # Extract the latest tag
+                      latest_tag=$(echo "$tags" | awk '{ print $2 }' | grep -v '{}' | sort -V | tail -n1 | sed 's|refs/tags/||')
+                      # Print the latest tag
+                      echo "Current Tag: $version, Latest tag: $latest_tag"
                     else
                       echo -e "$gem : Tool Doesn't exist\n"
                     fi
