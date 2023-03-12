@@ -31,17 +31,50 @@ jobs:
         run: |
           for repository in $repositories_col; do
             git clone "https://github.com/$repository.git"
-            ls -l
             cd "$(basename "$repository" .git)"
             gemspec_file=$(find . -type f -name '*.gemspec' -print -quit)
             if [[ -z $gemspec_file ]]; then
               echo "No .gemspec file found in $repository"
               exit 1
             fi
-            bundle-audit check --update > /dev/null
-            if [[ $? -ne 0 ]]; then
-              echo "Dependencies are not fixed in $repository"
-              exit 1
-            fi
+            
+            # steps for finding dependencies that do not have fixed versions in gemspec file
+            # Get a list of all the dependencies for the current repository
+            dependencies=$(gem dependency)
+            
+            # Parse the .gemspec file to get a list of all gems and their versions
+            gemspec_gems=($(awk '/^ *spec\.add_dependency / {print $2}' "$gemspec_file"))
+            gemspec_versions=($(awk '/^ *spec\.add_dependency / {print $4}' "$gemspec_file"))
+            
+            # Loop through the dependencies and check if they have a fixed version in the .gemspec file
+            while IFS= read -r dependency; do
+              # Parse the dependency string to get the name and version
+              name=$(echo "$dependency" | awk '{print $1}')
+              version=$(echo "$dependency" | awk '{print $2}')
+              
+              # Check if the dependency is in the .gemspec file
+              if [[ " ${gemspec_gems[@]} " =~ " ${name} " ]]; then
+                # Get the index of the dependency in the .gemspec file
+                index=$(echo ${gemspec_gems[@]} | tr ' ' '\n' | nl | grep -w "${name}" | awk '{print $1}')
+                gemspec_gem_version=${gemspec_versions[$index-1]}
+                
+                # Check if the gem in the .gemspec file has a fixed version
+                if [[ "$gemspec_gem_version" == "~>"* ]]; then
+                  # If the gem in the .gemspec file has a '~>' version, check if the installed version satisfies the constraint
+                  if ! gem satisfies "${name}" "$gemspec_gem_version" "$version"; then
+                    echo "Dependency ${name} in $repository does not have a fixed version"
+                    exit 1
+                  fi
+                fi
+              else
+                # If the dependency is not in the .gemspec file, it is a transitive dependency
+                # and does not need to have a fixed version
+                echo "Dependency ${name} in $repository is a transitive dependency"
+              fi
+            done <<< "$dependencies"
+
+
             cd ..
+            rm -rf "$(basename "$repository" .git)"
+            echo "$dependencies"
           done
