@@ -51,7 +51,7 @@ jobs:
                     version=$(echo "$line" | awk '{print $4}' | sed 's/[",]//g')
 
                     if [[ "$state" == "~>"* || "$state" == ">="* || "$state" == "<="* || "$state" == "<"* || "$state" == ">"* ]]; then
-                        echo -e "Dependency ${gem} does not have a fixed version\n "
+                        echo -e "Dependency ${gem} does not have a fixed version "
                         echo -e "GEM:$gem Version:$version,  State:$state\n"
                         has_fixed_versions=false
                     fi
