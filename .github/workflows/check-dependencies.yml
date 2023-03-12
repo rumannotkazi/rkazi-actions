@@ -19,12 +19,12 @@ jobs:
       - name: Read repositories file
         id: read-repositories-file
         run: |
-          echo "{name}=repositories::$(cat ${{ inputs.repositories-file }})" >> $GITHUB_OUTPUT
+          echo "repositories=$(cat ${{ inputs.repositories-file }})" >> $GITHUB_OUTPUT
      
       - name: Check dependencies
         id: check-dependencies
         run: |
-          for repository in ${{ steps.read-repositories-file.outputs.repositories }}; do
+          for repository in ${{ env.repositories }}; do
             git clone "https://github.com/$repository.git"
             cd $repository
             gemspec_file=$(find . -type f -name '*.gemspec' -print -quit)
