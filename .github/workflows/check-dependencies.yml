@@ -40,21 +40,24 @@ jobs:
             
             gemspec_dependencies=($(grep "^ *spec.add_*" "$gemspec_file" | awk '{print $2, $3, $5}'))
             
-            # Loop through the dependencies and check if they have a fixed version
-            for dependency in "${gemspec_dependencies[@]}"; do
-              echo "GEMSPEC_DEPENDENCY = $dependency"
-              # Parse the dependency string to get the name and version
-              name=$(echo "$dependency" | awk '{print $0}')
-              version=$(echo "$dependency" | awk -F'[",]' '{print $1}')
-              echo "GEM: $name, Version: $version "
-              # Check if the version has a fixed version
-              if [[ "$version" == "~>"* || "$version" == ">="* || "$version" == "<="* || "$version" == "<"* || "$version" == ">"* ]]; then
-                echo "Dependency ${name} in $repository does not have a fixed version"
-              fi
-            done
+            echo "$gemspec_file"
 
+            while read -r line; do
+                if [[ $line == spec.add_*dependency* ]]; then
+                    gem=$(echo "$line" | awk '{print $2}' | sed 's/"//g')
+                    state=$(echo "$line" | awk '{print $3}' | sed 's/[",]//g')
+                    version=$(echo "$line" | awk '{print $4}' | sed 's/[",]//g')
+                    echo -e "GEM:$gem Version:$version,  State:$state\n"
+
+                    if [[ "$state" == "~>"* || "$state" == ">="* || "$state" == "<="* || "$state" == "<"* || "$state" == ">"* ]]; then
+                        echo -e "Dependency ${gem} does not have a fixed version\n "
+                    else
+                        echo -e "Dependency ${gem} does has a fixed version\n "
+                    fi
+                fi
+            done < $gemspec_file
 
             cd ..
             rm -rf "$(basename "$repository" .git)"
-            echo "$dependencies"
+            
           done
