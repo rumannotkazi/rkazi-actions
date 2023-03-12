@@ -49,10 +49,10 @@ jobs:
                     gem=$(echo "$line" | awk '{print $2}' | sed 's/"//g')
                     state=$(echo "$line" | awk '{print $3}' | sed 's/[",]//g')
                     version=$(echo "$line" | awk '{print $4}' | sed 's/[",]//g')
-                    echo -e "GEM:$gem Version:$version,  State:$state\n"
 
                     if [[ "$state" == "~>"* || "$state" == ">="* || "$state" == "<="* || "$state" == "<"* || "$state" == ">"* ]]; then
                         echo -e "Dependency ${gem} does not have a fixed version\n "
+                        echo -e "GEM:$gem Version:$version,  State:$state\n"
                         has_fixed_versions=false
                     fi
                 fi
@@ -62,7 +62,7 @@ jobs:
             
           done
 
-          if !$has_fixed_version; then
+          if ! $has_fixed_version; then
             echo "At least one tool has dependency not fixed"
             exit 1
           fi
