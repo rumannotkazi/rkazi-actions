@@ -22,7 +22,7 @@ jobs:
           ls
           echo "repositories=$(cat ${{ inputs.repositories-file }})" >> $GITHUB_ENV
           # export repositories=$(cat ${{ inputs.repositories-file }})
-          printenv
+          # printenv
      
       - name: Check dependencies
         id: check-dependencies
@@ -39,7 +39,7 @@ jobs:
               exit 1
             fi
             
-            echo "REPOSITORY BEING CHECKED : $repository"
+            echo "REPOSITORY BEING CHECKED : $repository" 
             gemspec_dependencies=($(grep "^ *spec.add_*" "$gemspec_file" | awk '{print $2, $3, $5}'))
             
             echo -e "GEMSPEC file being checked: $gemspec_file\n"
