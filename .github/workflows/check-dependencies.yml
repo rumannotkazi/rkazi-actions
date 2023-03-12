@@ -31,7 +31,8 @@ jobs:
         run: |
           for repository in $repositories_col; do
             git clone "https://github.com/$repository.git"
-            cd $repository
+            ls -l
+            cd "$(basename "$repository" .git)"
             gemspec_file=$(find . -type f -name '*.gemspec' -print -quit)
             if [[ -z $gemspec_file ]]; then
               echo "No .gemspec file found in $repository"
