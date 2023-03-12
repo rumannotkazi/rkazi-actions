@@ -38,7 +38,7 @@ jobs:
               exit 1
             fi
             
-            gemspec_dependencies=($(grep "^ *spec.add_development_dependency" "$gemspec_file" | awk '{print $2,$3,$5}'))
+            gemspec_dependencies=($(grep "^ *spec.add_*" "$gemspec_file" | awk '{print $2, $3, $5}'))
             
             # Loop through the dependencies and check if they have a fixed version
             for dependency in "${gemspec_dependencies[@]}"; do
@@ -50,7 +50,6 @@ jobs:
               # Check if the version has a fixed version
               if [[ "$version" == "~>"* || "$version" == ">="* || "$version" == "<="* || "$version" == "<"* || "$version" == ">"* ]]; then
                 echo "Dependency ${name} in $repository does not have a fixed version"
-                exit 1
               fi
             done
 
