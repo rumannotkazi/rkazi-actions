@@ -61,14 +61,14 @@ jobs:
 
                     if [[ "$state" == "~>"* || "$state" == ">="* || "$state" == "<="* || "$state" == "<"* || "$state" == ">"* ]]; then
                         echo -e "$repository: $dependency_type Dependency '${gem}' does not have a fixed version "
-                        echo -e " -> GEM:$gem State:$state, Version:$version\n"
+                        echo -e " -> GEM:$gem State:$state, Version:$version"
                         has_fixed_versions=false
                     fi
 
                     if [[ $gem =~ $repositories_col ]]; then
-                      echo "Tool exists"
+                      echo -e "$gem : Tool exists\n"
                     else
-                      echo "Tool Doesn't exist"
+                      echo -e "$gem : Tool Doesn't exist\n"
                     fi
                 fi
             done < $gemspec_file
