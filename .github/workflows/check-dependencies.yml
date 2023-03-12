@@ -45,7 +45,7 @@ jobs:
               # Parse the dependency string to get the name and version
               name=$(echo "$dependency" | awk '{print $1}')
               version=$(echo "$dependency" | awk '{print $2}')
-              
+              echo "GEM: $name, Version: $version "
               # Check if the version has a fixed version
               if [[ "$version" == "~>"* ]]; then
                 echo "Dependency ${name} in $repository does not have a fixed version"
