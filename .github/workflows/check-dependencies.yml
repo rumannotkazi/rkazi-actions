@@ -44,8 +44,8 @@ jobs:
             for dependency in "${gemspec_dependencies[@]}"; do
               echo "GEMSPEC_DEPENDENCY = $dependency"
               # Parse the dependency string to get the name and version
-              name=$(echo "$dependency" | awk '{print $1}')
-              version=$(echo "$dependency" | awk -F'[",]' '{print $2}')
+              name=$(echo "$dependency" | awk '{print $0}')
+              version=$(echo "$dependency" | awk -F'[",]' '{print $1}')
               echo "GEM: $name, Version: $version "
               # Check if the version has a fixed version
               if [[ "$version" == "~>"* || "$version" == ">="* || "$version" == "<="* || "$version" == "<"* || "$version" == ">"* ]]; then
