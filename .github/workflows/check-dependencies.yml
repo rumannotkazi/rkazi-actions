@@ -32,13 +32,13 @@ jobs:
           has_fixed_versions=true
           
           for repository in $repositories_col; do
-
+            ls -l
             echo "REPOSITORY BEING CHECKED : $repository" 
             tags=$(git ls-remote --tags "https://github.com/rumannotkazi/$repository.git")
             # Extract the latest tag of the repository
             latest_tag=$(echo "$tags" | awk '{ print $2 }' | grep -v '{}' | sort -V | tail -n1 | sed 's|refs/tags/||')
             echo "Latest version: $latest_tag"
-            sed -i "s/$repository, latest tag goes here/$repository, $latest_tag/" README.md 
+            sed -i "s/$repository, v[0-9]\+\.[0-9]\+\.[0-9]\+$/$repository, $latest_tag/" README.md 
 
             git clone "https://github.com/rumannotkazi/$repository.git"
             cd "$(basename "$repository" .git)"

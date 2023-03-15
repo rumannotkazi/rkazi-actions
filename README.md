@@ -3,4 +3,4 @@
 Actions to be reused 
 
 
-test-ruby-tool-1, latest tag goes here
+test-ruby-tool-1, v0.0.0
