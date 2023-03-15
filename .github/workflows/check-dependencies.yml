@@ -33,6 +33,13 @@ jobs:
           
           for repository in $repositories_col; do
 
+            echo "REPOSITORY BEING CHECKED : $repository" 
+            tags=$(git ls-remote --tags "https://github.com/rumannotkazi/$repository.git")
+            # Extract the latest tag of the repository
+            latest_tag=$(echo "$tags" | awk '{ print $2 }' | grep -v '{}' | sort -V | tail -n1 | sed 's|refs/tags/||')
+            echo "Latest version: $latest_tag"
+            sed -i "s/$repository, latest tag goes here/$repository, $latest_tag/" README.md 
+
             git clone "https://github.com/rumannotkazi/$repository.git"
             cd "$(basename "$repository" .git)"
             gemspec_file=$(find . -type f -name '*.gemspec' -print -quit)
@@ -41,7 +48,7 @@ jobs:
               exit 1
             fi
             
-            echo "REPOSITORY BEING CHECKED : $repository" 
+            
             gemspec_dependencies=($(grep "^ *spec.add_*" "$gemspec_file" | awk '{print $2, $3, $5}'))
             
             echo -e "GEMSPEC file being checked: $gemspec_file\n"
@@ -66,8 +73,8 @@ jobs:
                     fi
 
                     if [[ ${repositories[@]} =~ $gem ]]; then
-                      echo -e "$gem : Tool exists\n"
-                      tags=$(git ls-remote --tags "https://github.com/rumannotkazi/test-ruby-tool-2.git")
+                      echo -e "$gem : Tool exists"
+                      tags=$(git ls-remote --tags "https://github.com/rumannotkazi/$gem.git")
                       # Extract the latest tag
                       latest_tag=$(echo "$tags" | awk '{ print $2 }' | grep -v '{}' | sort -V | tail -n1 | sed 's|refs/tags/||')
                       # Print the latest tag

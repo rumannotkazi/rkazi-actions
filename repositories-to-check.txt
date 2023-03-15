@@ -1,1 +1,1 @@
-test-ruby-tool-1 test-ruby-tool-2 tool-3
+test-ruby-tool-1 test-ruby-tool-2
