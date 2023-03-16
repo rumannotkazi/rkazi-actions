@@ -38,12 +38,11 @@ jobs:
             # Extract the latest tag of the repository
             latest_tag=$(echo "$tags" | awk '{ print $2 }' | grep -v '{}' | sort -V | tail -n1 | sed 's|refs/tags/||')
             echo "Latest version: $latest_tag"
-            if sed -i "" "s|test-ruby-tool-1, v[0-9]\+\.[0-9]\+\.[0-9]|test-ruby-tool-1, v0.2.0|" README.md
+            if sed -E -i "" "s|$repository, v[0-9]+\.[0-9]+\.[0-9]+|$repository, $latest_tag|" README.md
               echo "README.md updated successfully"
             else
               echo "Error: Failed to update README.md"
             fi
-
 
             git clone "https://github.com/rumannotkazi/$repository.git"
             cd "$(basename "$repository" .git)"
