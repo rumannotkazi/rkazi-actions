@@ -41,6 +41,8 @@ jobs:
             latest_tag=$(echo "$tags" | awk '{ print $2 }' | grep -v '{}' | sort -V | tail -n1 | sed 's|refs/tags/||')
             echo "Latest version: $latest_tag"
             echo "Before Update"
+            cat README.md
+            
             if sed -i -E 's/($repository, v)[0-9]+\.[0-9]+\.[0-9]+/\$latest_tag/g' README.md; then
               echo "README.md updated successfully"
             else
