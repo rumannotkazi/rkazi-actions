@@ -99,6 +99,8 @@ jobs:
 
           if ! $has_fixed_versions; then
             echo "At least one tool has dependency not fixed"
+            git config --global user.email "rkazi@xccelerated.com"
+            git config --global user.name "Ruman Kazi"
             git add README.md
             git commit -m "Updated README.md file"
             git push origin main
