@@ -30,7 +30,8 @@ jobs:
           repositories_col: ${{ env.repositories }}
         run: |
           has_fixed_versions=true
-          
+          git config user.email "rkazi@xccelerated.com"
+          git config user.name "Ruman Kazi"
           for repository in $repositories_col; do
             ls -l
             echo "REPOSITORY BEING CHECKED : $repository" 
@@ -99,8 +100,6 @@ jobs:
 
           if ! $has_fixed_versions; then
             echo "At least one tool has dependency not fixed"
-            git config --global user.email "rkazi@xccelerated.com"
-            git config --global user.name "Ruman Kazi"
             git add README.md
             git commit -m "Updated README.md file"
             git push origin main
