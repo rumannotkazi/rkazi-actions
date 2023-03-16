@@ -28,6 +28,7 @@ jobs:
         id: check-dependencies
         env:
           repositories_col: ${{ env.repositories }}
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
           has_fixed_versions=true
           git config user.email "rkazi@xccelerated.com"
@@ -102,6 +103,11 @@ jobs:
             echo "At least one tool has dependency not fixed"
             git add README.md
             git commit -m "Updated README.md file"
-            git push origin main
             exit 0
           fi
+      - name: Push changes
+        uses: ad-m/github-push-action@v0.5.0
+        with:
+          branch: main
+          directory: ./
+          github_token: ${{ secrets.GITHUB_TOKEN }}
