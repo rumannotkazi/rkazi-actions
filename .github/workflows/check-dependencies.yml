@@ -40,11 +40,7 @@ jobs:
             # Extract the latest tag of the repository
             latest_tag=$(echo "$tags" | awk '{ print $2 }' | grep -v '{}' | sort -V | tail -n1 | sed 's|refs/tags/||')
             echo "Latest version: $latest_tag"
-            echo "This is some additional text." >> README.md
-           
-            cat README.md
-
-            if sed -E -i "" "s|$repository, v[0-9]+\.[0-9]+\.[0-9]+|$repository, $latest_tag|" README.md; then
+            if sed -E -i "" "s|$repository, v[0-9]+\.[0-9]+\.[0-9]+|$repository, $latest_tag|" 'README.md'; then
               echo "README.md updated successfully"
             else
               echo "Error: Failed to update README.md"
