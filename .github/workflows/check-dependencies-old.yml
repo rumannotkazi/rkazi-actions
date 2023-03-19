@@ -33,6 +33,7 @@ jobs:
           has_fixed_versions=true
           git config user.email "rkazi@xccelerated.com"
           git config user.name "Ruman Kazi"
+
           for repository in $repositories_col; do
             ls -l
             echo "REPOSITORY BEING CHECKED : $repository" 
@@ -44,6 +45,7 @@ jobs:
             git clone "https://github.com/rumannotkazi/$repository.git"
             cd "$(basename "$repository" .git)"
             gemspec_file=$(find . -type f -name '*.gemspec' -print -quit)
+
             if [[ -z $gemspec_file ]]; then
               echo "No .gemspec file found in $repository"
               exit 0
@@ -72,9 +74,9 @@ jobs:
                 has_fixed_versions=false
                 if [[ ${repositories[@]} =~ $gem ]]; then
                   tags=$(git ls-remote --tags "https://github.com/rumannotkazi/$gem.git")
-                  lastest_tag_gem = $(echo "$tags" | awk '{ print $2 }' | grep -v '{}' | sort -V | tail -n1 | sed 's|refs/tags/||')
+                  latest_tag_gem=$(echo "$tags" | awk '{ print $2 }' | grep -v '{}' | sort -V | tail -n1 | sed 's|refs/tags/||')
                   
-                  if $version == $latest_tag_gem
+                  if [[ $version == $latest_tag_gem ]]; then
                     echo -e "[x] - $repository: $dependency_type dependency '${gem}' [$version](latest)" >> README.md
                   else
                     echo -e "[x] - $repository: $dependency_type dependency '${gem}' [$version](latest: $lastest_tag_gem)" >> README.md
@@ -83,9 +85,9 @@ jobs:
               else
                 if [[ ${repositories[@]} =~ $gem ]]; then
                   tags=$(git ls-remote --tags "https://github.com/rumannotkazi/$gem.git")
-                  lastest_tag_gem = $(echo "$tags" | awk '{ print $2 }' | grep -v '{}' | sort -V | tail -n1 | sed 's|refs/tags/||')
+                  latest_tag_gem=$(echo "$tags" | awk '{ print $2 }' | grep -v '{}' | sort -V | tail -n1 | sed 's|refs/tags/||')
                   
-                  if $version == $latest_tag_gem
+                  if [[ $version == $latest_tag_gem ]]; then
                     echo -e "[+] - $repository: $dependency_type dependency '${gem}' [$version](latest)" >> README.md
                   else
                     echo -e "[+] - $repository: $dependency_type dependency '${gem}' [$version](latest: $lastest_tag_gem)" >> README.md
