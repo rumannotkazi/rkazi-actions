@@ -32,6 +32,7 @@ jobs:
           git config user.email "rkazi@xccelerated.com"
           git config user.name "Ruman Kazi"
           if [ -f README.md ]; then
+            echo -e "File exist and removing README.md\n"
             rm README.md
           fi
           touch README.md
