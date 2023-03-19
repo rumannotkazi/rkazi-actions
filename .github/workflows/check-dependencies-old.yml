@@ -73,17 +73,21 @@ jobs:
               if [[ "$state" == "~>"* || "$state" == ">="* || "$state" == "<="* || "$state" == "<"* || "$state" == ">"* ]]; then
                 has_fixed_versions=false
                 if [[ ${repositories[@]} =~ $gem ]]; then
+                  echo -e " ---> (unfixed) Checking for gem: $gem"
                   tags=$(git ls-remote --tags "https://github.com/rumannotkazi/$gem.git")
                   latest_tag_gem=$(echo "$tags" | awk '{ print $2 }' | grep -v '{}' | sort -V | tail -n1 | sed 's|refs/tags/||')
                   
                   if [[ $version == $latest_tag_gem ]]; then
-                    echo -e "[x] - $repository: $dependency_type dependency '${gem}' [$version](latest)" >> README.md
+                    echo -e "[x] - $repository: $dependency_type dependency '${gem}' [$state $version](latest)" >> README.md
                   else
-                    echo -e "[x] - $repository: $dependency_type dependency '${gem}' [$version](latest: $lastest_tag_gem)" >> README.md
+                    echo -e "[x] - $repository: $dependency_type dependency '${gem}' [$state $version](latest: $lastest_tag_gem)" >> README.md
                   fi
+                else
+                  echo -e "[x] - $repository: $dependency_type dependency '${gem}' [$state $version]" >> README.md
                 fi
               else
                 if [[ ${repositories[@]} =~ $gem ]]; then
+                  echo -e " ---> (fixed) Checking for gem: $gem"
                   tags=$(git ls-remote --tags "https://github.com/rumannotkazi/$gem.git")
                   latest_tag_gem=$(echo "$tags" | awk '{ print $2 }' | grep -v '{}' | sort -V | tail -n1 | sed 's|refs/tags/||')
                   
@@ -92,7 +96,9 @@ jobs:
                   else
                     echo -e "[+] - $repository: $dependency_type dependency '${gem}' [$version](latest: $lastest_tag_gem)" >> README.md
                   fi
-                fi
+                else
+                  echo -e "[+] - $repository: $dependency_type dependency '${gem}' [$state $version]" >> README.md
+                fi  
               fi
             done < $gemspec_file
             cd ..
