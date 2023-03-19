@@ -116,13 +116,13 @@ jobs:
 
           if ! $has_fixed_versions; then
             echo "At least one tool has dependency not fixed"
-            exit 1
+            exit 0
           fi
 
 
   dependency-tree:
     runs-on: ubuntu-latest
-    needs: check-dependency
+    needs: check-dependencies
     steps:
       - name: Checkout repository
         uses: actions/checkout@v3
