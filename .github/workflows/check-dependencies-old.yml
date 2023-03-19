@@ -73,16 +73,16 @@ jobs:
               if [[ "$state" == "~>"* || "$state" == ">="* || "$state" == "<="* || "$state" == "<"* || "$state" == ">"* ]]; then
                 has_fixed_versions=false
                 echo -e "Has fixed version: false"
-                # if [[ ${repositories[@]} =~ $gem ]]; then
-                #   tags=$(git ls-remote --tags "https://github.com/rumannotkazi/$gem.git")
-                #   latest_tag_gem=$(echo "$tags" | awk '{ print $2 }' | grep -v '{}' | sort -V | tail -n1 | sed 's|refs/tags/||')
+                if [[ ${repositories[@]} =~ $gem ]]; then
+                  tags=$(git ls-remote --tags "https://github.com/rumannotkazi/$gem.git")
+                  latest_tag_gem=$(echo "$tags" | awk '{ print $2 }' | grep -v '{}' | sort -V | tail -n1 | sed 's|refs/tags/||')
                   
-                #   if [[ $version == $latest_tag_gem ]]; then
-                #     echo -e "[x] - $repository: $dependency_type dependency '${gem}' [$version](latest)" >> README.md
-                #   else
-                #     echo -e "[x] - $repository: $dependency_type dependency '${gem}' [$version](latest: $lastest_tag_gem)" >> README.md
-                #   fi
-                # fi
+                  if [[ $version == $latest_tag_gem ]]; then
+                    echo -e "[x] - $repository: $dependency_type dependency '${gem}' [$version](latest)" >> README.md
+                  else
+                    echo -e "[x] - $repository: $dependency_type dependency '${gem}' [$version](latest: $lastest_tag_gem)" >> README.md
+                  fi
+                fi
               else
                 # if [[ ${repositories[@]} =~ $gem ]]; then
                 #   tags=$(git ls-remote --tags "https://github.com/rumannotkazi/$gem.git")
