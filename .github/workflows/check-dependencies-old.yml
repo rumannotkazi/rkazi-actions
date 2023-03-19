@@ -69,7 +69,7 @@ jobs:
               gem=$(echo "$line" | awk '{gsub(/,/,"",$2); print $2}' | sed 's/"//g')
               state=$(echo "$line" | awk '{print $3}' | sed 's/[",]//g')
               version=$(echo "$line" | awk '{print $4}' | sed 's/[",]//g')
-
+              echo -e "GEM: $gem, state: $state, version: $version"
               if [[ "$state" == "~>"* || "$state" == ">="* || "$state" == "<="* || "$state" == "<"* || "$state" == ">"* ]]; then
                 has_fixed_versions=false
                 if [[ ${repositories[@]} =~ $gem ]]; then
