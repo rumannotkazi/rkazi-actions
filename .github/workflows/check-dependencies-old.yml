@@ -34,7 +34,8 @@ jobs:
           git config user.email "rkazi@xccelerated.com"
           git config user.name "Ruman Kazi"
           rm README.md
-          echo -e "Krypton Repositories Dependency Status\n" > README.md
+          echo -e "[![Check Dependencies](https://github.com/rumannotkazi/rkazi-actions/actions/workflows/check-dependencies-old.yml/badge.svg)](https://github.com/rumannotkazi/rkazi-actions/actions/workflows/check-dependencies-old.yml)" >> README.md
+          echo -e "# My Repositories Dependency Status\n" > README.md
           for repository in $repositories_col; do
             echo "REPOSITORY BEING CHECKED : $repository" 
             tags=$(git ls-remote --tags "https://github.com/rumannotkazi/$repository.git")
