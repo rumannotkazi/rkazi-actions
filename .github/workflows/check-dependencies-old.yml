@@ -77,12 +77,12 @@ jobs:
                     latest_tag_gem=$(echo "$tags" | awk '{ print $2 }' | grep -v '{}' | sort -V | tail -n1 | sed 's|refs/tags/||')
                     
                     if [[ $version == $latest_tag_gem ]]; then
-                      echo -e "[x] - $dependency_type dependency '${gem}' [$state v$version] (latest)\n" >> ../README.md
+                      echo -e "❌ - $dependency_type dependency '${gem}' [$state v$version] (latest)\n" >> ../README.md
                     else
-                      echo -e "[x] - $dependency_type dependency '${gem}' [$state v$version] (latest: v$latest_tag_gem)\n" >> ../README.md
+                      echo -e "❌ - $dependency_type dependency '${gem}' [$state v$version] (latest: $latest_tag_gem)\n" >> ../README.md
                     fi
                   else
-                    echo -e "[x] - $dependency_type dependency '${gem}' [$state v$version]\n" >> ../README.md
+                    echo -e "❌ - $dependency_type dependency '${gem}' [$state v$version]\n" >> ../README.md
                   fi
                 else
                   if [[ ${repositories[@]} =~ $gem ]]; then
@@ -91,12 +91,12 @@ jobs:
                     latest_tag_gem=$(echo "$tags" | awk '{ print $2 }' | grep -v '{}' | sort -V | tail -n1 | sed 's|refs/tags/||')
                     
                     if [[ $version == $latest_tag_gem ]]; then
-                      echo -e "[+] - $dependency_type dependency '${gem}' [$state v$version] (latest)\n" >> ../README.md
+                      echo -e "✅ - $dependency_type dependency '${gem}' [$state v$version] (latest)\n" >> ../README.md
                     else
-                      echo -e "[+] - $dependency_type dependency '${gem}' [$state v$version] (latest: v$latest_tag_gem)\n" >> ../README.md
+                      echo -e "✅ - $dependency_type dependency '${gem}' [$state v$version] (latest: $latest_tag_gem)\n" >> ../README.md
                     fi
                   else
-                    echo -e "[+] - $dependency_type dependency '${gem}' [$state v$version]\n" >> ../README.md
+                    echo -e "✅ - $dependency_type dependency '${gem}' [$state v$version]\n" >> ../README.md
                   fi  
                 fi
               fi
