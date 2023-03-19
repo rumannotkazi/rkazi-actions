@@ -33,7 +33,9 @@ jobs:
           has_fixed_versions=true
           git config user.email "rkazi@xccelerated.com"
           git config user.name "Ruman Kazi"
-          rm README.md
+          if [ -f README.md ]; then
+            rm README.md
+          fi
           echo -e "[![Check Dependencies](https://github.com/rumannotkazi/rkazi-actions/actions/workflows/check-dependencies-old.yml/badge.svg)](https://github.com/rumannotkazi/rkazi-actions/actions/workflows/check-dependencies-old.yml)" >> README.md
           echo -e "# My Repositories Dependency Status\n" > README.md
           for repository in $repositories_col; do
