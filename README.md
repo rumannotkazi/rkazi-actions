@@ -36,4 +36,3 @@
 
 --------------------------------------------
 
-[![Check Dependencies](https://github.com/rumannotkazi/rkazi-actions/actions/workflows/check-dependencies-old.yml/badge.svg)](https://github.com/rumannotkazi/rkazi-actions/actions/workflows/check-dependencies-old.yml)
