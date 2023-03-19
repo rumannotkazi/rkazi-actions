@@ -79,7 +79,7 @@ jobs:
                     if [[ $version == $latest_tag_gem ]]; then
                       echo -e "[x] - $dependency_type dependency '${gem}' [$state v$version] (latest)\n" >> ../README.md
                     else
-                      echo -e "[x] - $dependency_type dependency '${gem}' [$state v$version] (latest: v$lastest_tag_gem)\n" >> ../README.md
+                      echo -e "[x] - $dependency_type dependency '${gem}' [$state v$version] (latest: v$latest_tag_gem)\n" >> ../README.md
                     fi
                   else
                     echo -e "[x] - $dependency_type dependency '${gem}' [$state v$version]\n" >> ../README.md
@@ -93,7 +93,7 @@ jobs:
                     if [[ $version == $latest_tag_gem ]]; then
                       echo -e "[+] - $dependency_type dependency '${gem}' [$state v$version] (latest)\n" >> ../README.md
                     else
-                      echo -e "[+] - $dependency_type dependency '${gem}' [$state v$version] (latest: v$lastest_tag_gem)\n" >> ../README.md
+                      echo -e "[+] - $dependency_type dependency '${gem}' [$state v$version] (latest: v$latest_tag_gem)\n" >> ../README.md
                     fi
                   else
                     echo -e "[+] - $dependency_type dependency '${gem}' [$state v$version]\n" >> ../README.md
