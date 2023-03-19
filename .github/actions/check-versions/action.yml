@@ -1,0 +1,58 @@
+name: Check Versions
+
+description: Update the versions of given repository
+
+author: Ruman Kazi
+
+inputs:
+  repository-to-check:
+    description: 'Repository to check'
+    required: true
+  target-file:
+    description: 'The file where these updates are written'
+    required: false
+    default: README.md
+  author-name:
+    description: 'Name of the author updating README.md'
+    required: false
+    default: 'Ruman Kazi'
+  author-email:
+    description: 'Email of the author updating README.md'
+    required: false
+    default: 'rkaz@xcclerated.io'
+
+
+runs:
+  using: "composite"
+  steps:
+    - name: "Update README.md"
+      shell: bash
+      run: |
+        echo "REPOSITORY BEING CHECKED : ${{ inputs.repository-to-check }}" 
+        tags=$(git ls-remote --tags "https://github.com/rumannotkazi/${{ inputs.repository-to-check }}.git")
+        
+        # Extract the latest tag of the repository
+        latest_tag=$(echo "$tags" | awk '{ print $2 }' | grep -v '{}' | sort -V | tail -n1 | sed 's|refs/tags/||')
+
+        current_tag = $(grep -oP 'test-ruby-tool-1, v\K[\d\.]+' README.md)
+
+        echo "Current Tag: $current_tag , Latest Tag: $current_tag"
+
+        
+        
+        if $current_tag == $latest_tag; then
+          echo "Latest updated"
+          exit 0
+        else
+          sed -i -E "s/($${{ inputs.repository-to-check }}, )v[0-9]+\.[0-9]+\.[0-9]+/\1${latest_tag}/g" README.md
+          if git diff --exit-code README.md; then
+            echo "Error: Failed to update README.md"
+            exit 1
+          else
+            echo "README.md updated successfully"
+          fi
+        fi
+
+        
+
+

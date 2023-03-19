@@ -1,0 +1,110 @@
+name: Check Dependencies
+
+on:
+  workflow_dispatch:
+    inputs:
+      repositories-file:
+        description: 'Path to the file that contains the repositories to check'
+        required: true
+        default: 'repositories-to-check.txt'
+
+jobs:
+  check-dependencies:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v3
+
+      - name: Read repositories file
+        id: read-repositories-file
+        run: |
+          ls
+          echo "repositories=$(cat ${{ inputs.repositories-file }})" >> $GITHUB_ENV
+          # export repositories=$(cat ${{ inputs.repositories-file }})
+          # printenv
+     
+      - name: Check dependencies
+        id: check-dependencies
+        env:
+          repositories_col: ${{ env.repositories }}
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          has_fixed_versions=true
+          git config user.email "rkazi@xccelerated.com"
+          git config user.name "Ruman Kazi"
+          for repository in $repositories_col; do
+            ls -l
+            echo "REPOSITORY BEING CHECKED : $repository" 
+            tags=$(git ls-remote --tags "https://github.com/rumannotkazi/$repository.git")
+            # Extract the latest tag of the repository
+            latest_tag=$(echo "$tags" | awk '{ print $2 }' | grep -v '{}' | sort -V | tail -n1 | sed 's|refs/tags/||')
+            echo -e "$repository : $latest_tag (latest version)" >> README.md
+
+            git clone "https://github.com/rumannotkazi/$repository.git"
+            cd "$(basename "$repository" .git)"
+            gemspec_file=$(find . -type f -name '*.gemspec' -print -quit)
+            if [[ -z $gemspec_file ]]; then
+              echo "No .gemspec file found in $repository"
+              exit 0
+            fi
+            
+            
+            gemspec_dependencies=($(grep "^ *spec.add_*" "$gemspec_file" | awk '{print $2, $3, $5}'))
+            
+            echo -e "GEMSPEC file being checked: $gemspec_file\n"
+            
+            while read -r line; do
+              if [[ $line == spec.add_*dependency* ]]; then
+                dependency_type=""
+                if [[ $line == spec.add_development* ]]; then
+                    dependency_type="Development"
+                fi
+                if [[ $line == spec.add_runtime* ]]; then
+                    dependency_type="Runtime"
+                fi
+                gem=$(echo "$line" | awk '{gsub(/,/,"",$2); print $2}' | sed 's/"//g')
+                state=$(echo "$line" | awk '{print $3}' | sed 's/[",]//g')
+                version=$(echo "$line" | awk '{print $4}' | sed 's/[",]//g')
+
+                if [[ "$state" == "~>"* || "$state" == ">="* || "$state" == "<="* || "$state" == "<"* || "$state" == ">"* ]]; then
+                  
+                  has_fixed_versions=false
+
+                  if [[ ${repositories[@]} =~ $gem ]]; then
+                    tags=$(git ls-remote --tags "https://github.com/rumannotkazi/$gem.git")
+                    lastest_tag_gem = $(echo "$tags" | awk '{ print $2 }' | grep -v '{}' | sort -V | tail -n1 | sed 's|refs/tags/||')
+                    
+                    if $version == $latest_tag_gem
+                      echo -e "[x] - $repository: $dependency_type dependency '${gem}' [$version](latest)" >> README.md
+                    else
+                      echo -e "[x] - $repository: $dependency_type dependency '${gem}' [$version](latest: $lastest_tag_gem)" >> README.md
+                    fi
+                  fi
+                else
+                  if [[ ${repositories[@]} =~ $gem ]]; then
+                    tags=$(git ls-remote --tags "https://github.com/rumannotkazi/$gem.git")
+                    lastest_tag_gem = $(echo "$tags" | awk '{ print $2 }' | grep -v '{}' | sort -V | tail -n1 | sed 's|refs/tags/||')
+                    
+                    if $version == $latest_tag_gem
+                      echo -e "[+] - $repository: $dependency_type dependency '${gem}' [$version](latest)" >> README.md
+                    else
+                      echo -e "[+] - $repository: $dependency_type dependency '${gem}' [$version](latest: $lastest_tag_gem)" >> README.md
+                    fi
+                  fi
+                fi
+              fi
+            done < $gemspec_file
+            cd ..
+            rm -rf "$(basename "$repository" .git)"
+            echo -e "--------------------------------------------\n" >> README.md
+          done
+
+          git add README.md
+          git commit -m "Updated README.md file"
+          git push origin main
+          
+          if ! $has_fixed_versions; then
+            echo "At least one tool has dependency not fixed"
+            exit 1
+          fi

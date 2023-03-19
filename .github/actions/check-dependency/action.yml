@@ -5,9 +5,18 @@ description: Checks the dependencies mentioned in a gemspec file
 author: Ruman Kazi
 
 inputs:
-  repositories-to-check:
-    description: 'Repos to check'
+  repository-to-check:
+    description: 'Repository to check'
     required: true
+  dependency-type:
+    description: 'Dependencies to be checked : all | development | runtime'
+    required: true
+    default: 'all' 
+
+outputs:
+  not-fixed-version-flag:
+    description: Returns false if there is at least one unfixed dependency
+    value: $$ {{steps.check-version.outputs.flag }}
 
 
 
