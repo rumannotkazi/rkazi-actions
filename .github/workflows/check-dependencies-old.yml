@@ -21,8 +21,6 @@ jobs:
         run: |
           ls
           echo "repositories=$(cat ${{ inputs.repositories-file }})" >> $GITHUB_ENV
-          # export repositories=$(cat ${{ inputs.repositories-file }})
-          # printenv
      
       - name: Check dependencies
         id: check-dependencies
@@ -39,6 +37,7 @@ jobs:
           touch README.md
           echo -e "# My Repositories Dependency Status\n" > README.md
           echo -e "[![Check Dependencies](https://github.com/rumannotkazi/rkazi-actions/actions/workflows/check-dependencies-old.yml/badge.svg)](https://github.com/rumannotkazi/rkazi-actions/actions/workflows/check-dependencies-old.yml)" >> README.md
+          
           for repository in $repositories_col; do
             echo "REPOSITORY BEING CHECKED : $repository" 
             tags=$(git ls-remote --tags "https://github.com/rumannotkazi/$repository.git")
@@ -119,3 +118,70 @@ jobs:
             echo "At least one tool has dependency not fixed"
             exit 1
           fi
+
+
+  dependency-tree:
+    runs-on: ubuntu-latest
+    needs: check-dependency
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v3
+
+      - name: Read repositories file
+        id: read-repositories-file
+        run: |
+          ls
+          echo "repositories=$(cat ${{ inputs.repositories-file }})" >> $GITHUB_ENV
+
+      - name: Dependency Tree
+        run: |
+          echo -e "### Dependency Tree \n" >> README.md
+          function process_repository() {
+            local repo=$1
+            local visited_repos=("${!2}")
+            local current_chain=("${!3}")
+
+            if [[ " ${visited_repos[@]} " =~ " ${repo} " ]]; then
+              # Circular dependency, stop processing
+              echo "Circular Dependency detected"
+              return
+            fi
+
+            visited_repos+=("${repo}")
+            current_chain+=("${repo}")
+
+            git clone "https://github.com/rumannotkazi/$repo.git"
+            cd "$(basename "$repo" .git)"
+            gemspec_file=$(find . -type f -name '*.gemspec' -print -quit)
+
+            if [[ -z $gemspec_file ]]; then
+              echo "No .gemspec file found in $repo"
+              return
+            fi
+
+            gemspec_dependencies=($(grep "^ *spec.add_*" "$gemspec_file" | awk '{print $2, $3, $5}'))
+
+            echo -e "GEMSPEC file being checked: $gemspec_file\n"
+
+            local has_dependency=false
+            while read -r line; do
+              gem=$(echo "$line" | awk '{gsub(/,/,"",$2); print $2}' | sed 's/"//g')
+              state=$(echo "$line" | awk '{print $3}' | sed 's/[",]//g')
+              version=$(echo "$line" | awk '{print $4}' | sed 's/[",]//g')
+
+              if [[ ${repositories[@]} =~ $gem ]]; then
+                has_dependency=true
+                # process the dependency and check for further links
+                process_repository "$gem" visited_repos[@] current_chain[@]
+              fi
+            done < <(echo "${gemspec_dependencies[@]}")
+
+            if [[ $has_dependency == false ]]; then
+              echo -e "${current_chain[@]}" | sed 's/ / -> /g' >> ../README.md
+            fi
+          }
+
+          for repository in $repositories; do
+            echo "REPOSITORY BEING CHECKED: $repository"
+            process_repository "$repository" "" ""
+          done
