@@ -33,7 +33,8 @@ jobs:
           has_fixed_versions=true
           git config user.email "rkazi@xccelerated.com"
           git config user.name "Ruman Kazi"
-
+          rm README.md
+          echo -e "Krypton Repositories Dependency Status\n" > README.md
           for repository in $repositories_col; do
             echo "REPOSITORY BEING CHECKED : $repository" 
             tags=$(git ls-remote --tags "https://github.com/rumannotkazi/$repository.git")
