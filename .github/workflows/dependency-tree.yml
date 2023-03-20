@@ -51,6 +51,7 @@ jobs:
             fi
 
             visited_repos+=("${repo}")
+            echo -e "Added to current_chain: ${repo}"
             current_chain+=("${repo}")
 
             echo -e "Cloning Repo : $repo"
