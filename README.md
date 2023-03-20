@@ -36,4 +36,9 @@
 🔵 - Runtime dependency 'tool-4' [= v0.0.1]
 
 --------------------------------------------
- 
+ ### Dependency Tree 
+
+ - test-ruby-tool-1 ([latest: v0.1.0](https://github.com/rumannotkazi//releases/tag/v0.1.0)) >> test-ruby-tool-2 [~> v0.0.1] ([latest: v0.1.0](https://github.com/rumannotkazi/test-ruby-tool-2/releases/tag/v0.1.0))
+
+ - test-ruby-tool-2 ([latest: v0.1.0](https://github.com/rumannotkazi/ruby-tool/releases/tag/v0.1.0))
+
