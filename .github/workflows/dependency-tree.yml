@@ -88,7 +88,7 @@ jobs:
               # Generate the output with arrows
               output=""
               for i in "${!current_chain[@]}"; do
-                output+="${current_chain[i]} ${current_chain_info[i]}"
+                output+="${current_chain[i]}:${current_chain_info[i]}"
                 if [ $i -lt $((${#current_chain[@]}-1)) ]; then
                   output+=" -> "
                 fi
