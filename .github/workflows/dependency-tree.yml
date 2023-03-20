@@ -70,17 +70,11 @@ jobs:
 
             local has_dependency=false
             while read -r line; do
-              if [[ $line == spec.add_development* ]]; then
-                dependency_type="Development"
-              fi
-              if [[ $line == spec.add_runtime* ]]; then
-                dependency_type="Runtime"
-              fi
               gem=$(echo "$line" | awk '{gsub(/,/,"",$2); print $2}' | sed 's/"//g')
               state=$(echo "$line" | awk '{print $3}' | sed 's/[",]//g')
               version=$(echo "$line" | awk '{print $4}' | sed 's/[",]//g')
               
-              echo -e "GEM:$gem, State:$state, V:$version, Repos:${repositories[*]}"
+              echo -e "$line :: GEM:$gem, State:$state, V:$version, Repos:${repositories[*]}"
               if [[ " ${repositories[*]} " == *" $gem "* ]]; then
                 tags=$(git ls-remote --tags "https://github.com/rumannotkazi/$gem.git")
                 latest_tag_gem=$(echo "$tags" | awk '{ print $2 }' | grep -v '{}' | sort -V | tail -n1 | sed 's|refs/tags/||')
