@@ -76,8 +76,8 @@ jobs:
                 echo -e "GEM: $gem, state: $state, version: $version"
                 if [[ "$state" == "~>"* || "$state" == ">="* || "$state" == "<="* || "$state" == "<"* || "$state" == ">"* ]]; then
                   has_fixed_versions=false
-                  echo "Repo: ${repositories[@]}-and Gem:$gem/val"
-                  if [[ "${repositories[@]}" == "$gem" ]]; then
+
+                  if [[ " ${repositories[*]} " == " $gem " ]]; then
                     echo -e " ---> (unfixed) Checking for gem: $gem"
                     tags=$(git ls-remote --tags "https://github.com/rumannotkazi/$gem.git")
                     latest_tag_gem=$(echo "$tags" | awk '{ print $2 }' | grep -v '{}' | sort -V | tail -n1 | sed 's|refs/tags/||')
@@ -91,7 +91,7 @@ jobs:
                     echo -e "🔵 - $dependency_type dependency '${gem}' [$state v$version]\n" >> ../README.md
                   fi
                 else
-                  if [[ "${repositories[@]}" == "$gem" ]]; then
+                  if [[ " ${repositories[*]} " == " $gem " ]]; then
                     echo -e " ---> (fixed) Checking for gem: $gem"
                     tags=$(git ls-remote --tags "https://github.com/rumannotkazi/$gem.git")
                     latest_tag_gem=$(echo "$tags" | awk '{ print $2 }' | grep -v '{}' | sort -V | tail -n1 | sed 's|refs/tags/||')
