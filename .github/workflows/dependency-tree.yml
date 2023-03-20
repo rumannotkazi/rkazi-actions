@@ -104,7 +104,7 @@ jobs:
             tags=$(git ls-remote --tags "https://github.com/rumannotkazi/$repository.git")
             latest_tag_gem=$(echo "$tags" | awk '{ print $2 }' | grep -v '{}' | sort -V | tail -n1 | sed 's|refs/tags/||')
             current_chain_info="(latest:$latest_tag_gem)"
-            process_repository "$repository" current_chain_info
+            process_repository "$repository" $current_chain_info
           done
 
 
