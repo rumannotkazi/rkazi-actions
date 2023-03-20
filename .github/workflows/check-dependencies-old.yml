@@ -190,7 +190,7 @@ jobs:
 
           for repository in $repositories; do
             echo "REPOSITORY BEING CHECKED: $repository"
-            process_repository "$repository" "" ""
+            process_repository "$repository" "()" "()"
           done
 
 
