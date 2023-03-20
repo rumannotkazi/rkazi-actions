@@ -100,8 +100,8 @@ jobs:
               done
               echo -e "$output" >> ${{ github.WORKSPACE }}/README.md
             fi
-            cd ${{ github.WORKSPACE }}
-            rm -rf "/tmp/$repo"
+            # cd ${{ github.WORKSPACE }}
+            # rm -rf "/tmp/$repo"
           }
 
           for repository in $repositories; do
