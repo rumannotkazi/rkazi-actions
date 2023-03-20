@@ -76,6 +76,7 @@ jobs:
                 echo -e "GEM: $gem, state: $state, version: $version"
                 if [[ "$state" == "~>"* || "$state" == ">="* || "$state" == "<="* || "$state" == "<"* || "$state" == ">"* ]]; then
                   has_fixed_versions=false
+                  echo "Repo: ${repositories[@]}-and Gem:$gem/val"
                   if [[ "${repositories[@]}" == "$gem" ]]; then
                     echo -e " ---> (unfixed) Checking for gem: $gem"
                     tags=$(git ls-remote --tags "https://github.com/rumannotkazi/$gem.git")
