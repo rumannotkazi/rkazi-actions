@@ -40,3 +40,7 @@
 
 test-ruby-tool-1 current_chain_info[@] >> test-ruby-tool-2 
 test-ruby-tool-1 current_chain_info >> test-ruby-tool-2  >> test-ruby-tool-2 
+### Dependency Tree 
+
+test-ruby-tool-1 current_chain_info[@] >> test-ruby-tool-2 
+test-ruby-tool-1 (latest:v0.1.0) >> test-ruby-tool-2  >> test-ruby-tool-2 
