@@ -48,3 +48,7 @@ test-ruby-tool-1 (latest:v0.1.0) >> test-ruby-tool-2  >> test-ruby-tool-2
 
 output[@]
 output[@]
+### Dependency Tree 
+
+test-ruby-tool-1 (latest:v0.1.0) >> test-ruby-tool-2 [~> v0.0.1] (latest: v0.1.0)
+test-ruby-tool-2 (latest:v0.1.0)
