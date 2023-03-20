@@ -179,7 +179,7 @@ jobs:
                 # process the dependency and check for further links
                 process_repository "$gem" visited_repos[@] current_chain[@]
               fi
-            done < <(echo "${gemspec_dependencies[@]}")
+            done << (echo "${gemspec_dependencies[@]}")
 
             if [[ $has_dependency == false ]]; then
               echo -e "${current_chain[@]}" | sed 's/ / -> /g' >> ../README.md
@@ -190,7 +190,7 @@ jobs:
 
           for repository in $repositories; do
             echo "REPOSITORY BEING CHECKED: $repository"
-            process_repository "$repository" "()" "()"
+            process_repository "$repository" "" ""
           done
 
 
