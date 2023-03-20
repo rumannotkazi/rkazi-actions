@@ -81,6 +81,8 @@ jobs:
                 version=${BASH_REMATCH[4]:-0}
 
                 echo -e "INFO: $dep_type '$gem_name', '$state$version'"
+              else
+                echo "No match"
               fi
               echo -e "$line :: GEM:$gem, State:$state, V:$version, Repos:${repositories[*]}"
               if [[ " ${repositories[*]} " == *" $gem "* ]]; then
