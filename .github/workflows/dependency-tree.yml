@@ -45,7 +45,6 @@ jobs:
             fi
 
             visited_repos+=("${repo}")
-            current_chain+=("${repo}")
             echo -e "Cloning Repo : $repo"
             git clone "https://github.com/rumannotkazi/$repo.git" "/tmp/$repo"
             cd "/tmp/$repo"
@@ -74,10 +73,9 @@ jobs:
                 latest_tag_gem=$(echo "$tags" | awk '{ print $2 }' | grep -v '{}' | sort -V | tail -n1 | sed 's|refs/tags/||')
                 
                 has_dependency=true
-                current_chain_info+=("[$state v$version] (latest: $latest_tag_repo)")
+                current_chain+=("$repo [$state v$version] (latest: $latest_tag_repo)")
                 # process the dependency and check for further links
                 process_repository "$gem" visited_repos[@] current_chain[@]
-                current_chain[-1]+=" [$state $version] (latest: $latest_tag_repo)"
               fi
             done < <(echo "${gemspec_dependencies[@]}")
 
