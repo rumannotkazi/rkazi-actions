@@ -110,14 +110,16 @@ jobs:
             rm -rf "$(basename "$repository" .git)"
             echo -e "--------------------------------------------\n" >> README.md
           done
-
-          git add README.md
-          git commit -m "Updated README.md file"
-          git push origin main
+          if git diff --exit-code README.md; then
+            echo "Nothing to commit"
+          else
+            git add README.md
+            git commit -m "Updated README.md file"
+            git push origin main
+          fi
 
           if ! $has_fixed_versions; then
             echo "At least one tool has dependency not fixed"
-            exit 0
           fi
 
 
