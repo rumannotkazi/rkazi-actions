@@ -31,8 +31,6 @@ jobs:
             local current_chain_info=$2
             local visited_repos=()
             local output=()
-            
-            local current_chain_info=()
 
             if [ -n "${3-}" ]; then
               visited_repos=("${!3}")
@@ -40,10 +38,6 @@ jobs:
 
             if [ -n "${4-}" ]; then
               current_chain=("${!4}")
-            fi
-
-            if [ -n "${2-}" ]; then
-              current_chain_info=("${!2}")
             fi
 
             if [[ " ${visited_repos[@]} " == " ${repo} " ]]; then
@@ -85,7 +79,7 @@ jobs:
                 current_chain_info+=("[$state v$version] (latest: $latest_tag_gem)")
                 echo "Current Chain: $current_chain and info: $current_chain_info"
                 # process the dependency and check for further links
-                process_repository "$gem" visited_repos[@] current_chain[@] current_chain_info[@]
+                process_repository "$gem" current_chain_info[@] visited_repos[@] current_chain[@] 
               fi
             done < <(echo "${gemspec_dependencies[@]}")
 
