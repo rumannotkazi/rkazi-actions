@@ -82,7 +82,7 @@ jobs:
                 latest_tag_gem=$(echo "$tags" | awk '{ print $2 }' | grep -v '{}' | sort -V | tail -n1 | sed 's|refs/tags/||')
                 has_dependency=true
                 current_chain_info+=("[$state v$version] (latest: $latest_tag_gem)")
-                
+                echo "Current Chain: $current_chain_info"
                 # process the dependency and check for further links
                 process_repository "$gem" visited_repos[@] current_chain[@] current_chain_info[@]
               fi
