@@ -73,9 +73,11 @@ jobs:
               state=$(echo "$line" | awk '{print $3}' | sed 's/[",]//g')
               version=$(echo "$line" | awk '{print $4}' | sed 's/[",]//g')
               
-              tags=$(git ls-remote --tags "https://github.com/rumannotkazi/$gem.git")
-              latest_tag_gem=$(echo "$tags" | awk '{ print $2 }' | grep -v '{}' | sort -V | tail -n1 | sed 's|refs/tags/||')
+
               if [[ ${repositories[@]} =~ $gem ]]; then
+                tags=$(git ls-remote --tags "https://github.com/rumannotkazi/$gem.git")
+                latest_tag_gem=$(echo "$tags" | awk '{ print $2 }' | grep -v '{}' | sort -V | tail -n1 | sed 's|refs/tags/||')
+                
                 has_dependency=true
                 current_chain_info+=("[$state v$version] (latest: $latest_tag_repo)")
                 # process the dependency and check for further links
