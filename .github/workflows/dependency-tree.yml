@@ -86,7 +86,7 @@ jobs:
                 done
 
                 output+="$repo [$state v$version] (latest: $latest_tag_gem) -> "
-
+                echo -e "Output: $output"
                 # process the dependency and check for further links
                 process_repository "$gem" $((depth + 1))
               fi
