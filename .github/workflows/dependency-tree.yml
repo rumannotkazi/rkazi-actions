@@ -28,21 +28,21 @@ jobs:
           echo -e "### Dependency Tree \n" >> README.md
           function process_repository() {
             local repo=$1
+            local depth=$2
             local visited_repos=()
-            local current_chain=()
-            local current_chain_info=()
+            local output=()
 
-            if [ -n "${2-}" ]; then
+            if [ -n "${3-}" ]; then
               visited_repos=("${!2}")
             fi
 
-            if [ -n "${3-}" ]; then
-              current_chain=("${!3}")
-            fi
+            # if [ -n "${3-}" ]; then
+            #   current_chain=("${!3}")
+            # fi
 
-            if [ -n "${4-}" ]; then
-              current_chain_info=("${!4}")
-            fi
+            # if [ -n "${4-}" ]; then
+            #   current_chain_info=("${!4}")
+            # fi
 
             if [[ " ${visited_repos[@]} " == " ${repo} " ]]; then
               # Circular dependency, stop processing
@@ -51,8 +51,7 @@ jobs:
             fi
 
             visited_repos+=("${repo}")
-            echo -e "Added to current_chain: ${repo} and chain: $current_chain"
-            current_chain+=("${repo}")
+            echo -e "Added to current_chain: ${repo} and visited: $visited_repos"
 
             echo -e "Cloning Repo : $repo"
             git clone "https://github.com/rumannotkazi/$repo.git" "/tmp/$repo"
@@ -81,10 +80,15 @@ jobs:
                 tags=$(git ls-remote --tags "https://github.com/rumannotkazi/$gem.git")
                 latest_tag_gem=$(echo "$tags" | awk '{ print $2 }' | grep -v '{}' | sort -V | tail -n1 | sed 's|refs/tags/||')
                 has_dependency=true
-                current_chain_info+=("[$state v$version] (latest: $latest_tag_gem)")
-                echo "Current Chain: $current_chain_info"
+                
+                for ((i=0; i<$depth; i++)); do
+                  output+="  "
+                done
+
+                output+="$repo [$state v$version] (latest: $latest_tag_gem) -> "
+
                 # process the dependency and check for further links
-                process_repository "$gem" visited_repos[@] current_chain[@] current_chain_info[@]
+                process_repository "$gem" $((depth + 1))
               fi
             done < <(echo "${gemspec_dependencies[@]}")
 
@@ -106,7 +110,7 @@ jobs:
 
           for repository in $repositories; do
             echo "REPOSITORY BEING CHECKED: $repository"
-            process_repository "$repository"
+            process_repository "$repository" 0
           done
 
 
