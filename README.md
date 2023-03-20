@@ -3,7 +3,7 @@
 [![Check Dependencies](https://github.com/rumannotkazi/rkazi-actions/actions/workflows/check-dependencies-old.yml/badge.svg)](https://github.com/rumannotkazi/rkazi-actions/actions/workflows/check-dependencies-old.yml)
 ### test-ruby-tool-1 : v0.1.0 (latest version): 
 
-🔵 -  dependency 'test-ruby-tool-2' [~> v0.0.1]
+❌ -  dependency '[test-ruby-tool-2](https://github.com/rumannotkazi/test-ruby-tool-2)' [~> v0.0.1] (latest: v0.1.0)
 
 🔵 - Development dependency 'bundler' [= v1.16]
 
