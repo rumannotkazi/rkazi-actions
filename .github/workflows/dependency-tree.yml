@@ -28,20 +28,22 @@ jobs:
           echo -e "### Dependency Tree \n" >> README.md
           function process_repository() {
             local repo=$1
-            local depth=$2
+            local current_chain_info=$2
             local visited_repos=()
             local output=()
-
-            if [ -n "${2-}" ]; then
-              visited_repos=("${!2}")
-            fi
+            
+            local current_chain_info=()
 
             if [ -n "${3-}" ]; then
-              current_chain=("${!3}")
+              visited_repos=("${!3}")
             fi
 
             if [ -n "${4-}" ]; then
-              current_chain_info=("${!4}")
+              current_chain=("${!4}")
+            fi
+
+            if [ -n "${2-}" ]; then
+              current_chain_info=("${!2}")
             fi
 
             if [[ " ${visited_repos[@]} " == " ${repo} " ]]; then
@@ -81,7 +83,7 @@ jobs:
                 latest_tag_gem=$(echo "$tags" | awk '{ print $2 }' | grep -v '{}' | sort -V | tail -n1 | sed 's|refs/tags/||')
                 has_dependency=true
                 current_chain_info+=("[$state v$version] (latest: $latest_tag_gem)")
-                echo "Current Chain: $current_chain_info"
+                echo "Current Chain: $current_chain and info: $current_chain_info"
                 # process the dependency and check for further links
                 process_repository "$gem" visited_repos[@] current_chain[@] current_chain_info[@]
               fi
@@ -91,13 +93,13 @@ jobs:
               # Generate the output with arrows
               output=""
               for i in "${!current_chain[@]}"; do
-                output+="${current_chain[i]}"
-                output+=" ${current_chain_info[i]}"
+                output+="${current_chain[i]} ${current_chain_info[i]}"
                 if [ $i -lt $((${#current_chain[@]}-1)) ]; then
-                  output+=" -> "
+                  output+=" >> "
                 fi
               done
               echo -e "$output" >> ${{ github.WORKSPACE }}/README.md
+              
             fi
             cd ${{ github.WORKSPACE }}
             rm -rf "/tmp/$repo"
@@ -105,7 +107,10 @@ jobs:
 
           for repository in $repositories; do
             echo "REPOSITORY BEING CHECKED: $repository"
-            process_repository "$repository"
+            tags=$(git ls-remote --tags "https://github.com/rumannotkazi/$gem.git")
+            latest_tag_gem=$(echo "$tags" | awk '{ print $2 }' | grep -v '{}' | sort -V | tail -n1 | sed 's|refs/tags/||')
+            current_chain_info="(latest:$latest_tag_gem)"
+            process_repository "$repository" current_chain_info
           done
 
 
