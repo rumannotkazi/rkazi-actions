@@ -23,6 +23,7 @@ jobs:
           echo "repositories=$(cat ${{ inputs.repositories-file }})" >> $GITHUB_ENV
 
       - name: Dependency Tree
+        shell: bash
         run: |
           echo -e "### Dependency Tree \n" >> README.md
           function process_repository() {
