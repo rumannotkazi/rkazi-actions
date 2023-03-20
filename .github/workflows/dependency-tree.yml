@@ -75,8 +75,9 @@ jobs:
               state=$(echo "$line" | awk '{print $2}' | sed 's/[",]//g')
               version=$(echo "$line" | awk '{print $3}' | sed 's/[",]//g')
 
-              echo -e "$line :: GEM:$gem, State:$state, V:$version, Repos:${repositories[*]}"
+              echo -e ":: GEM:$gem, State:$state, V:$version"
               if [[ " ${repositories[*]} " == *" $gem "* ]]; then
+                echo -e "Found the gem"
                 tags=$(git ls-remote --tags "https://github.com/rumannotkazi/$gem.git")
                 latest_tag_gem=$(echo "$tags" | awk '{ print $2 }' | grep -v '{}' | sort -V | tail -n1 | sed 's|refs/tags/||')
                 has_dependency=true

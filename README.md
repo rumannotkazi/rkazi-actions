@@ -36,12 +36,3 @@
 🔵 - Runtime dependency 'tool-4' [= v0.0.1]
 
 --------------------------------------------
-
-### Dependency Tree 
-
-test-ruby-tool-1 
-test-ruby-tool-2 
-### Dependency Tree 
-
-test-ruby-tool-2 
-test-ruby-tool-2 
