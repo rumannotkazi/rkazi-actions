@@ -138,7 +138,6 @@ jobs:
 
       - name: Dependency Tree
         run: |
-          
           echo -e "### Dependency Tree \n" >> README.md
           function process_repository() {
             local repo=$1
@@ -153,7 +152,7 @@ jobs:
 
             visited_repos+=("${repo}")
             current_chain+=("${repo}")
-
+            echo -e "Cloning Repo : $repo"
             git clone "https://github.com/rumannotkazi/$repo.git"
             cd "$(basename "$repo" .git)"
             gemspec_file=$(find . -type f -name '*.gemspec' -print -quit)
@@ -162,6 +161,8 @@ jobs:
               echo "No .gemspec file found in $repo"
               return
             fi
+
+            echo -e "Gemspec file found for $repo"
 
             gemspec_dependencies=($(grep "^ *spec.add_*" "$gemspec_file" | awk '{print $2, $3, $5}'))
 
@@ -191,3 +192,15 @@ jobs:
             echo "REPOSITORY BEING CHECKED: $repository"
             process_repository "$repository" "" ""
           done
+
+
+
+          if git diff --exit-code README.md; then
+            echo "Nothing to commit"
+          else
+            git config user.email "rkazi@xccelerated.com"
+            git config user.name "Ruman Kazi"
+            git add README.md
+            git commit -m "Updated Dependency tree in README.md file"
+            git push origin main
+          fi
