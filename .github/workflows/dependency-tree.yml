@@ -27,9 +27,17 @@ jobs:
           echo -e "### Dependency Tree \n" >> README.md
           function process_repository() {
             local repo=$1
-            local visited_repos=("${!2}")
-            local current_chain=("${!3}")
+            local visited_repos=()
+            local current_chain=()
 
+            if [ -n "${2-}" ]; then
+              visited_repos=("${!2}")
+            fi
+
+            if [ -n "${3-}" ]; then
+              current_chain=("${!3}")
+            fi
+            
             if [[ " ${visited_repos[@]} " =~ " ${repo} " ]]; then
               # Circular dependency, stop processing
               echo "Circular Dependency detected"
