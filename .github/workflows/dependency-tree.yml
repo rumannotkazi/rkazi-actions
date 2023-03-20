@@ -30,15 +30,15 @@ jobs:
             local repo=$1
             local depth=$2
             local visited_repos=()
-            local output=()
+            local output=""
 
             if [ -n "${3-}" ]; then
-              visited_repos=("${!2}")
+              visited_repos=("${!3}")
             fi
 
-            # if [ -n "${3-}" ]; then
-            #   current_chain=("${!3}")
-            # fi
+            if [ -n "${4-}" ]; then
+              output=("${!4}")
+            fi
 
             # if [ -n "${4-}" ]; then
             #   current_chain_info=("${!4}")
