@@ -76,7 +76,7 @@ jobs:
             done < <(echo "${gemspec_dependencies[@]}")
 
             if [[ $has_dependency == false ]]; then
-              echo -e "${current_chain[@]}" | sed 's/ / -> /g' >> ../README.md
+              echo -e "${current_chain[@]} -> " >> ${{ github.WORKSPACE }}/README.md
             fi
             cd ..
             rm -rf "$(basename "$repository" .git)"

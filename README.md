@@ -37,8 +37,3 @@
 
 --------------------------------------------
 
-
-### Dependency Tree 
-
-test-ruby-tool-1
-test-ruby-tool-2
