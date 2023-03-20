@@ -51,7 +51,7 @@ jobs:
             fi
 
             visited_repos+=("${repo}")
-            echo -e "Added to current_chain: ${repo}"
+            echo -e "Added to current_chain: ${repo} and chain: $current_chain"
             current_chain+=("${repo}")
 
             echo -e "Cloning Repo : $repo"
@@ -100,8 +100,8 @@ jobs:
               done
               echo -e "$output" >> ${{ github.WORKSPACE }}/README.md
             fi
-            # cd ${{ github.WORKSPACE }}
-            # rm -rf "/tmp/$repo"
+            cd ${{ github.WORKSPACE }}
+            rm -rf "/tmp/$repo"
           }
 
           for repository in $repositories; do
