@@ -65,25 +65,16 @@ jobs:
 
             echo -e "Gemspec file found for $repo"
 
-            gemspec_dependencies=($(grep "^ *spec.add_*" "$gemspec_file" | awk '{print $2, $3, $5}'))
+            gemspec_dependencies=($(grep "^ *spec.add_*" "$gemspec_file" | awk '{print $2, $4, $6}'))
 
             echo -e "GEMSPEC file being checked: $gemspec_file\n"
 
             local has_dependency=false
             while read -r line; do
-              # gem=$(echo "$line" | awk '{gsub(/,/,"",$2); print $2}' | sed 's/"//g')
-              # state=$(echo "$line" | awk '{print $3}' | sed 's/[",]//g')
-              # version=$(echo "$line" | awk '{print $4}' | sed 's/[",]//g')
-              if [[ $line =~ spec\.add_(runtime|development)?_dependency\ "(.+)"(,\ "(.+)"(,\ "(.+?)")?)? ]]; then
-                dep_type=${BASH_REMATCH[1]:-runtime}
-                gem=${BASH_REMATCH[2]}
-                state=${BASH_REMATCH[3]:-~>}
-                version=${BASH_REMATCH[4]:-0}
+              gem=$(echo "$line" | awk '{gsub(/,/,"",$2); print $2}' | sed 's/"//g')
+              state=$(echo "$line" | awk '{print $3}' | sed 's/[",]//g')
+              version=$(echo "$line" | awk '{print $4}' | sed 's/[",]//g')
 
-                echo -e "INFO: $dep_type '$gem_name', '$state$version'"
-              else
-                echo "No match"
-              fi
               echo -e "$line :: GEM:$gem, State:$state, V:$version, Repos:${repositories[*]}"
               if [[ " ${repositories[*]} " == *" $gem "* ]]; then
                 tags=$(git ls-remote --tags "https://github.com/rumannotkazi/$gem.git")
