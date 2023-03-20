@@ -37,7 +37,7 @@ jobs:
             if [ -n "${3-}" ]; then
               current_chain=("${!3}")
             fi
-            
+
             if [[ " ${visited_repos[@]} " =~ " ${repo} " ]]; then
               # Circular dependency, stop processing
               echo "Circular Dependency detected"
@@ -84,7 +84,7 @@ jobs:
 
           for repository in $repositories; do
             echo "REPOSITORY BEING CHECKED: $repository"
-            process_repository "$repository" "" ""
+            process_repository "$repository"
           done
 
 
