@@ -65,7 +65,7 @@ jobs:
                 tags=$(git ls-remote --tags "https://github.com/rumannotkazi/$gem.git")
                 latest_tag_gem=$(echo "$tags" | awk '{ print $2 }' | grep -v '{}' | sort -V | tail -n1 | sed 's|refs/tags/||')
                 has_dependency=true
-                current_chain_info=("[$state v$version] (latest: $latest_tag_gem)")
+                current_chain_info=("[$state v$version] ([latest: $latest_tag_gem](https://github.com/rumannotkazi/$gem/releases/tag/$latest_tag_gem))")
                 echo "Current Chain: $current_chain and info: $current_chain_info"
                 output+=" >> $gem $current_chain_info"
                 # process the dependency and check for further links
@@ -74,7 +74,7 @@ jobs:
             done < <(echo "${gemspec_dependencies[@]}")
 
             if [[ $has_dependency == false ]]; then
-              echo -e "$output" >> ${{ github.WORKSPACE }}/README.md 
+              echo -e " - $output\n" >> ${{ github.WORKSPACE }}/README.md 
             fi
             cd ${{ github.WORKSPACE }}
             rm -rf "/tmp/$repo"
@@ -84,7 +84,7 @@ jobs:
             echo "REPOSITORY BEING CHECKED: $repository"
             tags=$(git ls-remote --tags "https://github.com/rumannotkazi/$repository.git")
             latest_tag_gem=$(echo "$tags" | awk '{ print $2 }' | grep -v '{}' | sort -V | tail -n1 | sed 's|refs/tags/||')
-            output="$repository (latest:$latest_tag_gem)"
+            output="$repository ([latest: $latest_tag_gem](https://github.com/rumannotkazi/$gem/releases/tag/$latest_tag_gem))"
             process_repository "$repository" "$output"
           done
 
